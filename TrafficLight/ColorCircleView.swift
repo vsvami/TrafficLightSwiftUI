@@ -7,20 +7,22 @@
 
 import SwiftUI
 
-struct LightView: View {
+struct ColorCircleView: View {
 
     let color: Color
+    let opacity: Double
 
     var body: some View {
         ZStack {
             Circle()
+                .frame(width: 150)
                 .foregroundStyle(color)
-                .frame(width: 150, height: 150)
-                .overlay(Circle().stroke(Color.white, lineWidth: 5))
+                .opacity(opacity)
+                .overlay(Circle().stroke(Color.white, lineWidth: 4))
         }
     }
 }
 
 #Preview {
-    LightView(color: .red)
+    ColorCircleView(color: .red, opacity: 0.3)
 }

@@ -10,62 +10,59 @@ import SwiftUI
 struct ContentView: View {
     
     @State private var currentLight = CurrentLight.red
-    @State private var nameButton = "Start"
+    @State private var buttonTitle = "Start"
     
-    @State private var opacityRed = 0.3
-    @State private var opacityYellow = 0.3
-    @State private var opacityGreen = 0.3
+    @State private var redLightState = 0.3
+    @State private var yellowLightState = 0.3
+    @State private var greenLightState = 0.3
     
-    private let lightIsOff = 0.3
-    private let lightIsOn = 1.0
-
     var body: some View {
-        VStack {
+        ZStack {
+            Color.black
+            .ignoresSafeArea()
+            
             VStack {
-                LightView(color: .red)
-                    .opacity(opacityRed)
-                LightView(color: .yellow)
-                    .opacity(opacityYellow)
-                LightView(color: .green)
-                    .opacity(opacityGreen)
+                VStack(spacing: 20) {
+                    ColorCircleView(color: .red, opacity: redLightState)
+                    ColorCircleView(color: .yellow, opacity: yellowLightState)
+                    ColorCircleView(color: .green, opacity: greenLightState)
+                }
+                Spacer()
+                
+                StartButtonView(title: buttonTitle) {
+                    if buttonTitle == "Start" {
+                        buttonTitle = "Next"
+                    }
+                    nextColor()
+                }
             }
-            Spacer()
-            Button(action: buttonTapped) {
-                Text(nameButton)
-                    .font(.title)
-                    .foregroundColor(.white)
-                    .frame(width: 150, height: 50)
-                    .background(Color.blue)
-                    .cornerRadius(10)
-            }
+            .padding(.bottom, 50)
         }
-        .padding(.bottom, 50)
     }
     
-    private func buttonTapped() {
-        if nameButton == "Start" {
-            nameButton = "Next"
-        }
+    private func nextColor() {
+        let lightIsOff = 0.3
+        let lightIsOn = 1.0
         
         switch currentLight {
         case .red:
-            opacityGreen = lightIsOff
-            opacityRed = lightIsOn
+            greenLightState = lightIsOff
+            redLightState = lightIsOn
             currentLight = .yellow
         case .yellow:
-            opacityRed = lightIsOff
-            opacityYellow = lightIsOn
+            redLightState = lightIsOff
+            yellowLightState = lightIsOn
             currentLight = .green
         case .green:
-            opacityYellow = lightIsOff
-            opacityGreen = lightIsOn
+            yellowLightState = lightIsOff
+            greenLightState = lightIsOn
             currentLight = .red
         }
     }
 }
 
 //MARK: - CurrentLight
-extension ContentView {
+private extension ContentView {
     enum CurrentLight {
         case red, yellow, green
     }
