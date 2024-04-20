@@ -9,12 +9,8 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @State private var currentLight = CurrentLight.red
+    @State private var currentLight: CurrentLight = .off
     @State private var buttonTitle = "Start"
-    
-    @State private var redLightState = 0.3
-    @State private var yellowLightState = 0.3
-    @State private var greenLightState = 0.3
     
     var body: some View {
         ZStack {
@@ -23,9 +19,9 @@ struct ContentView: View {
             
             VStack {
                 VStack(spacing: 20) {
-                    ColorCircleView(color: .red, opacity: redLightState)
-                    ColorCircleView(color: .yellow, opacity: yellowLightState)
-                    ColorCircleView(color: .green, opacity: greenLightState)
+                    ColorCircleView(color: .red, opacity: currentLight == .red ? 1 : 0.3)
+                    ColorCircleView(color: .yellow, opacity: currentLight == .yellow ? 1 : 0.3)
+                    ColorCircleView(color: .green, opacity: currentLight == .green ? 1 : 0.3)
                 }
                 Spacer()
                 
@@ -41,22 +37,11 @@ struct ContentView: View {
     }
     
     private func nextColor() {
-        let lightIsOff = 0.3
-        let lightIsOn = 1.0
-        
         switch currentLight {
-        case .red:
-            greenLightState = lightIsOff
-            redLightState = lightIsOn
-            currentLight = .yellow
-        case .yellow:
-            redLightState = lightIsOff
-            yellowLightState = lightIsOn
-            currentLight = .green
-        case .green:
-            yellowLightState = lightIsOff
-            greenLightState = lightIsOn
-            currentLight = .red
+        case .off: currentLight = .red
+        case .red: currentLight = .yellow
+        case .yellow: currentLight = .green
+        case .green: currentLight = .red
         }
     }
 }
@@ -64,7 +49,7 @@ struct ContentView: View {
 //MARK: - CurrentLight
 private extension ContentView {
     enum CurrentLight {
-        case red, yellow, green
+        case off, red, yellow, green
     }
 }
 
